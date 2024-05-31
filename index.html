@@ -1,12 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </head>
+
 <body>
-    
+
+    <main class="main-container">
+        <nav id="nav">
+            <h1>Dashboard</h1>
+            <ul>
+                <li>
+                    <a href="/" class="active">
+                        <i class="fa fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-table"></i>
+                        Tables
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-check-square-o"></i>
+                        Forms
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-square"></i>
+                        Buttons
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-text-height"></i>
+                        Typography
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-sign-in"></i>
+                        Sign In
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-sign-out"></i>
+                        Sign Up
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-user"></i>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="fa fa-sign-out"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <section id="section">
+            <header id="header">
+            </header>
+            <section class="main-content">
+                <h1>
+                    <i class="fa fa-home"></i>
+                    Home Page
+                </h1>
+                <section class="container">
+                    <div class="item">
+                        <h2>Total Sale</h2>
+                        <p>304 Item sold</p>
+                    </div>
+                    <div class="item">
+                        <h2>Total Sale</h2>
+                        <p>304 Item sold</p>
+                    </div>
+                    <div class="item">
+                        <h2>Total Sale</h2>
+                        <p>304 Item sold</p>
+                    </div>
+                    <div class="item">
+                        <h2>Total Sale</h2>
+                        <p>304 Item sold</p>
+                    </div>
+                </section>
+
+                <section class="container">
+                    <div class="item">
+                        <h2>Product Chart</h2>
+                        <p>304 Item sold</p>
+                        <div id="barChart" style="height: 400px; width: 100%;"></div>
+                    </div>
+                    <div class="item">
+                        <h2>Financial Chart</h2>
+                        <p>304 Item sold</p>
+                        <div id="finChart" style="height: 400px; width: 100%;"></div>
+                    </div>
+                </section>
+
+
+            </section>
+        </section>
+    </main>
+
+
+
+    <!-- JS -->
+
+    <script>
+        window.onload = function () {
+            var barChart = new CanvasJS.Chart("barChart", {
+                animationEnabled: true,
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                title: {
+                    text: "Products"
+                },
+                axisY: {
+                    title: "Month"
+                },
+                data: [{
+                    type: "column",
+                    showInLegend: true,
+                    legendMarkerColor: "grey",
+                    legendText: "Each Month",
+                    dataPoints: [
+                        { y: 1000, label: "Jan" },
+                        { y: 976, label: "Feb" },
+                        { y: 788, label: "Mar" },
+                        { y: 127, label: "Apr" },
+                        { y: 566, label: "May" },
+                        { y: 876, label: "Jun" },
+                        { y: 986, label: "Jul" },
+                        { y: 132, label: "Aug" },
+                        { y: 100, label: "Sep" },
+                        { y: 253, label: "Oct" },
+                        { y: 876, label: "Nov" },
+                        { y: 679, label: "Dec" }
+                    ]
+                }]
+            });
+            barChart.render();
+
+            var dataPoints = [];
+
+            var chart = new CanvasJS.Chart("finChart", {
+                animationEnabled: true,
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                exportEnabled: true,
+                title: {
+                    text: "Netflix Stock Price in 2016"
+                },
+                subtitles: [{
+                    text: "Weekly Averages"
+                }],
+                axisX: {
+                    interval: 1,
+                    valueFormatString: "MMM"
+                },
+                axisY: {
+                    prefix: "$",
+                    title: "Price"
+                },
+                toolTip: {
+                    content: "Date: {x}<br /><strong>Price:</strong><br />Open: {y[0]}, Close: {y[3]}<br />High: {y[1]}, Low: {y[2]}"
+                },
+                data: [{
+                    type: "candlestick",
+                    yValueFormatString: "$##0.00",
+                    dataPoints: dataPoints
+                }]
+            });
+
+            $.get("https://canvasjs.com/data/gallery/javascript/netflix-stock-price.csv", getDataPointsFromCSV);
+
+            function getDataPointsFromCSV(csv) {
+                var csvLines = points = [];
+                csvLines = csv.split(/[\r?\n|\r|\n]+/);
+                for (var i = 0; i < csvLines.length; i++) {
+                    if (csvLines[i].length > 0) {
+                        points = csvLines[i].split(",");
+                        dataPoints.push({
+                            x: new Date(
+                                parseInt(points[0].split("-")[0]),
+                                parseInt(points[0].split("-")[1]),
+                                parseInt(points[0].split("-")[2])
+                            ),
+                            y: [
+                                parseFloat(points[1]),
+                                parseFloat(points[2]),
+                                parseFloat(points[3]),
+                                parseFloat(points[4])
+                            ]
+                        });
+                    }
+                }
+                chart.render();
+            }
+        }
+    </script>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 </body>
+
 </html>
